@@ -8,7 +8,7 @@
  */
 public class FlyweightNode extends CustomTreeNode {
 
-    private static FlyweightNode flyweightNode = new FlyweightNode();
+    private static FlyweightNode flyweight = new FlyweightNode();
 
     /**
      * @author maneeshavenigalla maneesha24@vt.edu
@@ -16,7 +16,7 @@ public class FlyweightNode extends CustomTreeNode {
      * @return the flyweight node
      */
     public static FlyweightNode getFlyweightInstance() {
-        return flyweightNode;
+        return flyweight;
     }
 
 

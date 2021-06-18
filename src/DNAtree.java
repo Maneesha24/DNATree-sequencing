@@ -62,7 +62,7 @@ public class DNAtree {
      *         file
      * @param line
      *            line to be read
-     * @param tree
+     * @param customTree
      *            the above initialized tree
      */
     static void executeCommands(String line, DNAtree customTree) {
@@ -92,12 +92,37 @@ public class DNAtree {
             System.out.println("tree dump:");
             root.printStats(0);
         }
-// else if (commands.length == 2 && commandValue.toLowerCase()
-// .contentEquals("search")) {
-// String searchResult = CustomTree.searchNode(commands[1]);
-// System.out.println(searchResult.substring(0, searchResult.length()
-// - 1));
-// }
+        else if (commands.length == 2 && commandValue.toLowerCase()
+            .contentEquals("search")) {
+            customTree.searchNode(commands[1]);
+        }
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         takes the sequence to be searched in the
+     *         tree
+     * @param sequence
+     *            sequence value to be removed from tree
+     */
+    public void searchNode(String sequence) {
+        boolean exact = sequence.endsWith("$");
+        if (exact) {
+            sequence = sequence.substring(0, sequence.length() - 1);
+        }
+        UtilsFunc results = new UtilsFunc();
+        char[] sequenceData = sequence.toCharArray();
+        root.search(0, sequenceData, exact, results);
+        System.out.println("# of nodes visited: " + results.getNodesVisited());
+        if (results.getMatches().size() == 0) {
+            System.out.println("no sequence found");
+        }
+        else {
+            for (char[] seq : results.getMatches()) {
+                System.out.println("sequence: " + String.valueOf(seq));
+            }
+        }
     }
 
 

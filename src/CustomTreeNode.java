@@ -23,6 +23,40 @@ public abstract class CustomTreeNode {
 
     /**
      * @author maneeshavenigalla maneesha24@vt.edu
+     *         calls the print function for printing
+     *         nodes
+     * @param results
+     *            search all nodes visited
+     */
+    public void searchAll(UtilsFunc results) {
+        results.incrementNodesVisited();
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         calls the print function for printing
+     *         nodes
+     * @param level
+     *            level value
+     * @param sequence
+     *            sequence that needs to be checked
+     * @param exact
+     *            returns true if it is a exact match
+     * @param results
+     *            results from search function
+     */
+    public void search(
+        int level,
+        char[] sequence,
+        boolean exact,
+        UtilsFunc results) {
+        results.incrementNodesVisited();
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
      *         gives indentation spaces
      * @param level
      *            level value
@@ -33,7 +67,8 @@ public abstract class CustomTreeNode {
         }
         printLengthsFunc(level);
     }
-    
+
+
     /**
      * @author maneeshavenigalla maneesha24@vt.edu
      *         gives indentation spaces
@@ -66,7 +101,8 @@ public abstract class CustomTreeNode {
      *            level value
      */
     public abstract void printLengthsFunc(int level);
-    
+
+
     /**
      * @author maneeshavenigalla maneesha24@vt.edu
      *         calls the print function for printing

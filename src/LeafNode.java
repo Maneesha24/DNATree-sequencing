@@ -9,8 +9,24 @@ public class LeafNode extends CustomTreeNode {
 
     private final char[] dnaSequence;
 
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         sets the sequence value to dnaSequence
+     * @param sequenceVal
+     *            value to be assigned
+     */
     public LeafNode(char[] sequenceVal) {
         dnaSequence = sequenceVal;
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         returns the dna sequence value
+     * @return dnasequence
+     */
+    public char[] getSequence() {
+        return dnaSequence;
     }
 
 
@@ -44,6 +60,11 @@ public class LeafNode extends CustomTreeNode {
     }
 
 
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         converts string value
+     * @return converts the value to string
+     */
     public String toString() {
         return String.valueOf(dnaSequence);
     }
@@ -101,11 +122,58 @@ public class LeafNode extends CustomTreeNode {
                 case 'T':
                     t++;
                     break;
+                default:
+                    break;
             }
         }
         String stats = String.format("A:%.2f C:%.2f G:%.2f T:%.2f", a / n, c
             / n, g / n, t / n);
         System.out.println(String.valueOf(dnaSequence) + " " + stats);
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         calls the print function for printing
+     *         nodes
+     * @param results
+     *            search all nodes visited
+     */
+    public void searchAll(UtilsFunc results) {
+        results.incrementNodesVisited();
+        results.addMatch(dnaSequence);
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         calls the print function for printing
+     *         nodes
+     * @param level
+     *            level value
+     * @param searchSequence
+     *            sequence that needs to be checked
+     * @param exact
+     *            returns true if it is a exact match
+     * @param results
+     *            results from search function
+     */
+    public void search(
+        int level,
+        char[] searchSequence,
+        boolean exact,
+        UtilsFunc results) {
+        results.incrementNodesVisited();
+        if (exact) {
+            if (toString().equals(String.valueOf(searchSequence))) {
+                results.addMatch(searchSequence);
+            }
+        }
+        else {
+            if (toString().startsWith(String.valueOf(searchSequence))) {
+                results.addMatch(this.dnaSequence);
+            }
+        }
     }
 
 }
