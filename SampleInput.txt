@@ -1,4 +1,5 @@
-       insert ACGT      
+       insert ACGT     
+    
 
 
  insert            AAAA   
@@ -10,16 +11,20 @@ remove       ACGT
 
 insert ACCTT
 insert ACTTA
-
-print
+ 
+ print
  
  insert TATA
  insert TCG
-print lengths
-print stats
-insert CAT
-insert ACGTACGT
-insert ACGTACGTT
+ 
+ print lengths
+ print stats
+ 
+ search         AAAA$
+                         search     AA
+ search      ACGT$
+  
+  
            
            
               
