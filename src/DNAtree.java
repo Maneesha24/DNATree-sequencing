@@ -32,25 +32,19 @@ public class DNAtree {
     public static void main(String[] args) throws FileNotFoundException {
 
         DNAtree customTree = new DNAtree();
+        Scanner scannedFile = null;
 
-        try {
-            Scanner scannedFile = null;
-
-            // Step 1 - read the input file
-            scannedFile = readFile(args[0]);
-            while (scannedFile.hasNextLine()) {
-                String line = scannedFile.nextLine();
-                if (!line.isEmpty() && line.length() > 2) {
-                    // Step 2 - remove any spaces
-                    String trimmedLine = trimSpaces(line);
-                    if (trimmedLine.length() > 1) {
-                        executeCommands(trimmedLine, customTree);
-                    }
+        // Step 1 - read the input file
+        scannedFile = readFile(args[0]);
+        while (scannedFile.hasNextLine()) {
+            String line = scannedFile.nextLine();
+            if (!line.isEmpty() && line.length() > 2) {
+                // Step 2 - remove any spaces
+                String trimmedLine = trimSpaces(line);
+                if (trimmedLine.length() > 1) {
+                    executeCommands(trimmedLine, customTree);
                 }
             }
-        }
-        catch (FileNotFoundException error) {
-            error.printStackTrace();
         }
 
     }
@@ -76,24 +70,20 @@ public class DNAtree {
             customTree.removeNode(commands[1]);
         }
         else if (commandValue.toLowerCase().contentEquals("print")
-            && commands.length > 0 && commands.length < 2) {
+            && commands.length == 1) {
             System.out.println("tree dump:");
             root.printNode(0);
         }
-        else if (commands.length == 2 && commandValue.toLowerCase()
-            .contentEquals("print") && commands[1].toLowerCase().contentEquals(
-                "lengths")) {
+        else if (commandValue.toLowerCase().contentEquals("print")
+            && commands[1].toLowerCase().contentEquals("lengths")) {
             System.out.println("tree dump:");
             root.printLengths(0);
         }
-        else if (commands.length == 2 && commandValue.toLowerCase()
-            .contentEquals("print") && commands[1].toLowerCase().contentEquals(
-                "stats")) {
+        else if (commands[1].toLowerCase().contentEquals("stats")) {
             System.out.println("tree dump:");
             root.printStats(0);
         }
-        else if (commands.length == 2 && commandValue.toLowerCase()
-            .contentEquals("search")) {
+        else {
             customTree.searchNode(commands[1]);
         }
     }
@@ -115,11 +105,11 @@ public class DNAtree {
         char[] sequenceData = sequence.toCharArray();
         root.search(0, sequenceData, exact, results);
         System.out.println("# of nodes visited: " + results.getNodesVisited());
-        if (results.getMatches().size() == 0) {
+        if (results.getResults().size() == 0) {
             System.out.println("no sequence found");
         }
         else {
-            for (char[] seq : results.getMatches()) {
+            for (char[] seq : results.getResults()) {
                 System.out.println("sequence: " + String.valueOf(seq));
             }
         }
@@ -143,13 +133,13 @@ public class DNAtree {
 
         else if (root instanceof LeafNode) {
             LeafNode leafNode = (LeafNode)root;
-            if (!leafNode.toString().equals(sequence)) {
-                System.out.println("sequence " + sequence + " does not exist");
+            if (leafNode.getStringVal().equals(sequence)) {
+                root = FlyweightNode.getFlyweightInstance();
+                System.out.println("sequence " + sequence + " removed");
             }
 
             else {
-                root = FlyweightNode.getFlyweightInstance();
-                System.out.println("sequence " + sequence + " removed");
+                System.out.println("sequence " + sequence + " does not exist");
             }
         }
 

@@ -96,6 +96,31 @@ public class DNATest extends TestCase {
      * @throws IOException
      *             returns true if the condition passes
      */
+    public void testExecuteInsertLeaf() throws IOException {
+
+        DNAtree testTree = new DNAtree();
+
+        final ByteArrayOutputStream outputStreamCaptor =
+            new ByteArrayOutputStream();
+
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        DNAtree.executeCommands("insert CAT", testTree);
+        DNAtree.executeCommands("insert ACGTACGT", testTree);
+        DNAtree.executeCommands("insert ACGTACGTT", testTree);
+        DNAtree.executeCommands("insert ACG", testTree);
+        assertEquals("sequence CAT inserted at level 0\n"
+            + "sequence ACGTACGT inserted at level 1\n"
+            + "sequence ACGTACGTT inserted at level 9\n"
+            + "sequence ACG inserted at level 4", outputStreamCaptor.toString()
+                .trim());
+    }
+
+
+    /**
+     * @throws IOException
+     *             returns true if the condition passes
+     */
     public void testExecuteAlphabetExists() throws IOException {
 
         DNAtree testTree = new DNAtree();
@@ -195,6 +220,64 @@ public class DNATest extends TestCase {
         DNAtree.executeCommands("remove AAAA", testTree);
         assertEquals("sequence AAAA inserted at level 0\n"
             + "sequence TGCAAA inserted at level 1\n" + "sequence AAAA removed",
+            outputStreamCaptor.toString().trim());
+    }
+    
+    /**
+     * @throws IOException
+     *             returns true if the condition passes
+     */
+    public void testExecuteSimpleLeafNode() throws IOException {
+
+        DNAtree testTree = new DNAtree();
+
+        final ByteArrayOutputStream outputStreamCaptor =
+            new ByteArrayOutputStream();
+
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        DNAtree.executeCommands("insert ACGTTACGATCTAGG", testTree);
+        DNAtree.executeCommands("insert ACGT", testTree);
+        DNAtree.executeCommands("insert ACGA", testTree);
+        DNAtree.executeCommands("insert GAT", testTree);
+        DNAtree.executeCommands("insert CG", testTree);
+        DNAtree.executeCommands("insert GATA", testTree);
+        DNAtree.executeCommands("insert ACG", testTree);
+        DNAtree.executeCommands("insert ACG", testTree);
+        DNAtree.executeCommands("insert ACGTTACGATCTAGG", testTree);
+        DNAtree.executeCommands("search GA", testTree);
+        DNAtree.executeCommands("search ACGA$", testTree);
+        DNAtree.executeCommands("insert GAT", testTree);
+        DNAtree.executeCommands("search ACG", testTree);
+        DNAtree.executeCommands("search A", testTree);
+        DNAtree.executeCommands("search A$", testTree);
+        assertEquals("sequence ACGTTACGATCTAGG inserted at level 0\n"
+            + "sequence ACGT inserted at level 5\n"
+            + "sequence ACGA inserted at level 4\n"
+            + "sequence GAT inserted at level 1\n"
+            + "sequence CG inserted at level 1\n"
+            + "sequence GATA inserted at level 4\n"
+            + "sequence ACG inserted at level 4\n"
+            + "sequence ACG already exists\n"
+            + "sequence ACGTTACGATCTAGG already exists\n"
+            + "# of nodes visited: 13\n"
+            + "sequence: GATA\n"
+            + "sequence: GAT\n"
+            + "# of nodes visited: 5\n"
+            + "sequence: ACGA\n"
+            + "sequence GAT already exists\n"
+            + "# of nodes visited: 14\n"
+            + "sequence: ACGA\n"
+            + "sequence: ACGTTACGATCTAGG\n"
+            + "sequence: ACGT\n"
+            + "sequence: ACG\n"
+            + "# of nodes visited: 22\n"
+            + "sequence: ACGA\n"
+            + "sequence: ACGTTACGATCTAGG\n"
+            + "sequence: ACGT\n"
+            + "sequence: ACG\n"
+            + "# of nodes visited: 3\n"
+            + "no sequence found",
             outputStreamCaptor.toString().trim());
     }
 
@@ -316,6 +399,41 @@ public class DNATest extends TestCase {
             + "sequence AAAA removed\n" + "tree dump:\n" + "TGCAAA\n"
             + "# of nodes visited: 1\n" + "sequence: TGCAAA", outputStreamCaptor
                 .toString().trim());
+    }
+
+
+    /**
+     * @throws IOException
+     *             returns true if the condition passes
+     */
+    public void testExecuteSearchExact() throws IOException {
+
+        DNAtree testTree = new DNAtree();
+
+        final ByteArrayOutputStream outputStreamCaptor =
+            new ByteArrayOutputStream();
+
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        DNAtree.executeCommands("insert AAAA", testTree);
+        DNAtree.executeCommands("insert TGCAAA", testTree);
+        DNAtree.executeCommands("print", testTree);
+        DNAtree.executeCommands("remove AAAA", testTree);
+        DNAtree.executeCommands("print", testTree);
+        DNAtree.executeCommands("search TGCAAA", testTree);
+        DNAtree.executeCommands("insert A", testTree);
+        DNAtree.executeCommands("insert GCA", testTree);
+        DNAtree.executeCommands("search A", testTree);
+        DNAtree.executeCommands("search GCA$", testTree);
+        assertEquals("sequence AAAA inserted at level 0\n"
+            + "sequence TGCAAA inserted at level 1\n" + "tree dump:\n" + "I\n"
+            + "  AAAA\n" + "  E\n" + "  E\n" + "  TGCAAA\n" + "  E\n"
+            + "sequence AAAA removed\n" + "tree dump:\n" + "TGCAAA\n"
+            + "# of nodes visited: 1\n" + "sequence: TGCAAA\n"
+            + "sequence A inserted at level 1\n"
+            + "sequence GCA inserted at level 1\n" + "# of nodes visited: 2\n"
+            + "sequence: A\n" + "# of nodes visited: 2\n" + "sequence: GCA",
+            outputStreamCaptor.toString().trim());
     }
 
 
@@ -611,7 +729,8 @@ public class DNATest extends TestCase {
             + "sequence: AA\n" + "# of nodes visited: 4\n"
             + "no sequence found", outputStreamCaptor.toString().trim());
     }
-    
+
+
     /**
      * @throws IOException
      *             returns true if the condition passes
@@ -661,6 +780,35 @@ public class DNATest extends TestCase {
             + "sequence ACGTACGTT inserted at level 9\n"
             + "sequence CAT already exists", outputStreamCaptor.toString()
                 .trim());
+    }
+
+
+    /**
+     * @throws IOException
+     *             returns true if the condition passes
+     */
+    public void testExecuteRemove() throws IOException {
+
+        DNAtree testTree = new DNAtree();
+
+        final ByteArrayOutputStream outputStreamCaptor =
+            new ByteArrayOutputStream();
+
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        DNAtree.executeCommands("insert CAT", testTree);
+        DNAtree.executeCommands("insert ACGTACGT", testTree);
+        DNAtree.executeCommands("insert ACGTACGTT", testTree);
+        DNAtree.executeCommands("insert CAT", testTree);
+        DNAtree.executeCommands("remove CAT", testTree);
+        DNAtree.executeCommands("remove ACGTACGTT", testTree);
+        DNAtree.executeCommands("remove ACGTACGT", testTree);
+        assertEquals("sequence CAT inserted at level 0\n"
+            + "sequence ACGTACGT inserted at level 1\n"
+            + "sequence ACGTACGTT inserted at level 9\n"
+            + "sequence CAT already exists\n" + "sequence CAT removed\n"
+            + "sequence ACGTACGTT removed\n" + "sequence ACGTACGT removed",
+            outputStreamCaptor.toString().trim());
     }
 
 }

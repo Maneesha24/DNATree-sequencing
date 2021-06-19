@@ -14,6 +14,8 @@ public class InternalNode extends CustomTreeNode {
      *         sets the A,C,G and T protein values
      */
     public InternalNode() {
+        
+//        To create one child node for each protein in DNA
         for (int i = 0; i < childNodes.length; i++) {
             childNodes[i] = FlyweightNode.getFlyweightInstance();
         }
@@ -32,27 +34,7 @@ public class InternalNode extends CustomTreeNode {
     public void insert(int level, LeafNode newnode, boolean isNode) {
         char characterVal = newnode.getCharacterValue(level);
 
-        int levelValue = 0;
-
-        switch (characterVal) {
-            case 'A':
-                levelValue = 0;
-                break;
-            case 'C':
-                levelValue = 1;
-                break;
-            case 'G':
-                levelValue = 2;
-                break;
-            case 'T':
-                levelValue = 3;
-                break;
-            case 0:
-                levelValue = 4;
-                break;
-            default:
-                break;
-        }
+        int levelValue = switchCaseFunc(characterVal);
 
         CustomTreeNode child = childNodes[levelValue];
         if (child instanceof FlyweightNode) {
@@ -64,10 +46,6 @@ public class InternalNode extends CustomTreeNode {
             return;
         }
         if (child instanceof LeafNode) {
-            if (levelValue == 4) {
-                System.out.println("sequence " + newnode + " already exists");
-                return;
-            }
 
             LeafNode leafNode = (LeafNode)child;
             if (leafNode.ifContainsSequence(newnode)) {
@@ -100,27 +78,7 @@ public class InternalNode extends CustomTreeNode {
 
         char characterVal = nodeRemove.getCharacterValue(level);
 
-        int levelValue = 0;
-
-        switch (characterVal) {
-            case 'A':
-                levelValue = 0;
-                break;
-            case 'C':
-                levelValue = 1;
-                break;
-            case 'G':
-                levelValue = 2;
-                break;
-            case 'T':
-                levelValue = 3;
-                break;
-            case 0:
-                levelValue = 4;
-                break;
-            default:
-                break;
-        }
+        int levelValue = switchCaseFunc(characterVal);
 
         CustomTreeNode child = childNodes[levelValue];
 
@@ -131,7 +89,7 @@ public class InternalNode extends CustomTreeNode {
 
         if (child instanceof LeafNode) {
             LeafNode leafNode = (LeafNode)child;
-            if (leafNode.toString().equals(nodeRemove.toString())) {
+            if (leafNode.getStringVal().equals(nodeRemove.getStringVal())) {
                 childNodes[levelValue] = FlyweightNode.getFlyweightInstance();
                 System.out.println("sequence " + nodeRemove + " removed");
                 return getNodeVal();
@@ -163,8 +121,9 @@ public class InternalNode extends CustomTreeNode {
      */
     public void printFunc(int level) {
         System.out.println("I");
-        for (CustomTreeNode child : childNodes) {
-            child.printNode(level + 1);
+        for (CustomTreeNode indv : childNodes) {
+            // Insert the level by 1
+            indv.printNode(level + 1);
         }
     }
 
@@ -176,8 +135,9 @@ public class InternalNode extends CustomTreeNode {
      */
     public void printLengthsFunc(int level) {
         System.out.println("I");
-        for (CustomTreeNode child : childNodes) {
-            child.printLengths(level + 1);
+        for (CustomTreeNode indv : childNodes) {
+            // Insert the level by 1
+            indv.printLengths(level + 1);
         }
     }
 
@@ -189,8 +149,9 @@ public class InternalNode extends CustomTreeNode {
      */
     public void printStatsFunc(int level) {
         System.out.println("I");
-        for (CustomTreeNode child : childNodes) {
-            child.printStats(level + 1);
+        for (CustomTreeNode indv : childNodes) {
+            // Insert the level by 1
+            indv.printStats(level + 1);
         }
     }
 
@@ -242,29 +203,29 @@ public class InternalNode extends CustomTreeNode {
      *            level value
      * @param sequence
      *            sequence that needs to be checked
-     * @param exact
+     * @param match
      *            returns true if it is a exact match
-     * @param results
+     * @param output
      *            results from search function
      */
     public void search(
         int level,
         char[] sequence,
-        boolean exact,
-        UtilsFunc results) {
-        char ch = 0;
-        if (level >= 0 && level < sequence.length) {
-            ch = sequence[level];
+        boolean match,
+        UtilsFunc output) {
+        char characterVal = 0;
+        if (level < sequence.length) {
+            characterVal = sequence[level];
         }
 
-        if (ch == 0 && !exact) {
-            searchAll(results);
+        if (characterVal == 0 && !match) {
+            searchAll(output);
             return;
         }
 
-        results.incrementNodesVisited();
+        output.incrementNodesVisited();
         CustomTreeNode child = null;
-        switch (ch) {
+        switch (characterVal) {
             case 'A':
                 child = childNodes[0];
                 break;
@@ -284,37 +245,64 @@ public class InternalNode extends CustomTreeNode {
                 break;
         }
 
-        if (ch == 0 && exact) {
-            results.incrementNodesVisited();
-            if (child instanceof LeafNode) {
-                LeafNode lNode = (LeafNode)child;
-                results.addMatch(lNode.toString().toCharArray());
-            }
-            return;
-        }
-
         if (child instanceof FlyweightNode) {
-            results.incrementNodesVisited();
+            output.incrementNodesVisited();
             return;
         }
 
         if (child instanceof LeafNode) {
-            results.incrementNodesVisited();
+            output.incrementNodesVisited();
             LeafNode lnode = (LeafNode)child;
-            if (exact) {
-                if (lnode.toString().equals(String.valueOf(sequence))) {
-                    results.addMatch(sequence);
+            if (match) {
+                if (lnode.getStringVal().equals(String.valueOf(sequence))) {
+                    output.resultAdd(sequence);
                 }
             }
             else {
-                if (lnode.toString().startsWith(String.valueOf(sequence))) {
-                    results.addMatch(lnode.toString().toCharArray());
+                if (lnode.getStringVal().startsWith(String.valueOf(sequence))) {
+                    output.resultAdd(lnode.getStringVal().toCharArray());
                 }
             }
             return;
         }
 
-        child.search(level + 1, sequence, exact, results);
+        child.search(level + 1, sequence, match, output);
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         calls the switch case to check if it
+     *         is A,C,G and T case.
+     * @param value
+     *            value of the characters
+     * @return the level value
+     */
+    public int switchCaseFunc(char value) {
+
+        int levelValue = 0;
+
+        switch (value) {
+            case 'A':
+                levelValue = 0;
+                break;
+            case 'C':
+                levelValue = 1;
+                break;
+            case 'G':
+                levelValue = 2;
+                break;
+            case 'T':
+                levelValue = 3;
+                break;
+            case 0:
+                levelValue = 4;
+                break;
+            default:
+                break;
+        }
+
+        return levelValue;
     }
 
 }

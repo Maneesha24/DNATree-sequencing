@@ -12,7 +12,7 @@ public class UtilsFunc {
 
     private int nodesVisited;
 
-    private ArrayList<char[]> matches;
+    private ArrayList<char[]> results;
 
     /**
      * @author maneeshavenigalla maneesha24@vt.edu
@@ -22,7 +22,26 @@ public class UtilsFunc {
      */
     public UtilsFunc() {
         nodesVisited = 0;
-        matches = new ArrayList<char[]>();
+        results = new ArrayList<char[]>();
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         returns the matches found as arrayList
+     * @return returns the arrayList of matches
+     */
+    public ArrayList<char[]> getResults() {
+        return results;
+    }
+
+
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         increments the number of nodes visited
+     */
+    public void incrementNodesVisited() {
+        nodesVisited++;
     }
 
 
@@ -38,30 +57,11 @@ public class UtilsFunc {
 
     /**
      * @author maneeshavenigalla maneesha24@vt.edu
-     *         returns the matches found as arrayList
-     * @return returns the arrayList of matches
-     */
-    public ArrayList<char[]> getMatches() {
-        return matches;
-    }
-
-
-    /**
-     * @author maneeshavenigalla maneesha24@vt.edu
-     *         increments the number of nodes visited
-     */
-    public void incrementNodesVisited() {
-        nodesVisited++;
-    }
-
-
-    /**
-     * @author maneeshavenigalla maneesha24@vt.edu
      *         adds the sequence to the matches arrayList
      * @param sequence
      *            value of sequence to matched arraylist
      */
-    public void addMatch(char[] sequence) {
-        matches.add(sequence);
+    public void resultAdd(char[] sequence) {
+        results.add(sequence);
     }
 }

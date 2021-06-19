@@ -1,5 +1,4 @@
-       insert ACGT     
-    
+       insert ACGT  
 
 
  insert            AAAA   

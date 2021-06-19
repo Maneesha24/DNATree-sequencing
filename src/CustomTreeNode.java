@@ -14,7 +14,7 @@ public abstract class CustomTreeNode {
      *            level value
      */
     public void printNode(int level) {
-        for (int i = 0; i < level; i++) {
+        for (int i = 1; i <= level; i++) {
             System.out.print("  ");
         }
         printFunc(level);
@@ -41,17 +41,17 @@ public abstract class CustomTreeNode {
      *            level value
      * @param sequence
      *            sequence that needs to be checked
-     * @param exact
+     * @param match
      *            returns true if it is a exact match
-     * @param results
+     * @param output
      *            results from search function
      */
     public void search(
         int level,
         char[] sequence,
-        boolean exact,
-        UtilsFunc results) {
-        results.incrementNodesVisited();
+        boolean match,
+        UtilsFunc output) {
+        output.incrementNodesVisited();
     }
 
 
@@ -62,7 +62,7 @@ public abstract class CustomTreeNode {
      *            level value
      */
     public void printLengths(int level) {
-        for (int i = 0; i < level; i++) {
+        for (int i = 1; i <= level; i++) {
             System.out.print("  ");
         }
         printLengthsFunc(level);
@@ -76,7 +76,7 @@ public abstract class CustomTreeNode {
      *            level value
      */
     public void printStats(int level) {
-        for (int i = 0; i < level; i++) {
+        for (int i = 1; i <= level; i++) {
             System.out.print("  ");
         }
         printStatsFunc(level);

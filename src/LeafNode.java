@@ -68,6 +68,15 @@ public class LeafNode extends CustomTreeNode {
     public String toString() {
         return String.valueOf(dnaSequence);
     }
+    
+    /**
+     * @author maneeshavenigalla maneesha24@vt.edu
+     *         converts string value
+     * @return converts the value to string
+     */
+    public String getStringVal() {
+        return String.valueOf(dnaSequence);
+    }
 
 
     /**
@@ -103,31 +112,40 @@ public class LeafNode extends CustomTreeNode {
      *            level to get the value against
      */
     public void printStatsFunc(int level) {
-        double n = dnaSequence.length / 100.;
-        double a = 0;
-        double c = 0;
-        double g = 0;
-        double t = 0;
-        for (char ch : dnaSequence) {
-            switch (ch) {
+        double n = (dnaSequence.length / 100.);
+        int a = 0;
+        int c = 0;
+        int g = 0;
+        int t = 0;
+        for (char characterVal : dnaSequence) {
+            switch (characterVal) {
                 case 'A':
-                    a++;
+                    a += 1;
                     break;
                 case 'C':
-                    c++;
+                    c += 1;
                     break;
                 case 'G':
-                    g++;
+                    g += 1;
                     break;
                 case 'T':
-                    t++;
+                    t += 1;
                     break;
                 default:
                     break;
             }
         }
-        String stats = String.format("A:%.2f C:%.2f G:%.2f T:%.2f", a / n, c
-            / n, g / n, t / n);
+
+        String resultA = String.format("A:%.2f", a / n);
+        String resultC = String.format("C:%.2f", c / n);
+        String resultG = String.format("G:%.2f", g / n);
+        String resultT = String.format("T:%.2f", t / n);
+
+        String stats = "";
+        stats += resultA;
+        stats += " " + resultC;
+        stats += " " + resultG;
+        stats += " " + resultT;
         System.out.println(String.valueOf(dnaSequence) + " " + stats);
     }
 
@@ -136,12 +154,12 @@ public class LeafNode extends CustomTreeNode {
      * @author maneeshavenigalla maneesha24@vt.edu
      *         calls the print function for printing
      *         nodes
-     * @param results
+     * @param output
      *            search all nodes visited
      */
-    public void searchAll(UtilsFunc results) {
-        results.incrementNodesVisited();
-        results.addMatch(dnaSequence);
+    public void searchAll(UtilsFunc output) {
+        output.incrementNodesVisited();
+        output.resultAdd(dnaSequence);
     }
 
 
@@ -153,26 +171,22 @@ public class LeafNode extends CustomTreeNode {
      *            level value
      * @param searchSequence
      *            sequence that needs to be checked
-     * @param exact
+     * @param match
      *            returns true if it is a exact match
-     * @param results
+     * @param output
      *            results from search function
      */
     public void search(
         int level,
         char[] searchSequence,
-        boolean exact,
-        UtilsFunc results) {
-        results.incrementNodesVisited();
-        if (exact) {
-            if (toString().equals(String.valueOf(searchSequence))) {
-                results.addMatch(searchSequence);
-            }
+        boolean match,
+        UtilsFunc output) {
+        output.incrementNodesVisited();
+        if (match && getStringVal().equals(String.valueOf(searchSequence))) {
+            output.resultAdd(searchSequence);
         }
-        else {
-            if (toString().startsWith(String.valueOf(searchSequence))) {
-                results.addMatch(this.dnaSequence);
-            }
+        else if (getStringVal().startsWith(String.valueOf(searchSequence))) {
+            output.resultAdd(this.dnaSequence);
         }
     }
 
